@@ -53,7 +53,8 @@ class Product
     private float $price = 0.0;
 
     #[MongoDB\Field(type: 'string')]
-    #[Assert\Currency]
+    #[Assert\NotBlank]
+    #[Assert\Regex(pattern: '/^[A-Z]{3}$/', message: 'Code devise ISO 4217 attendu (3 lettres majuscules).')]
     private string $currency = 'EUR';
 
     #[MongoDB\Field(type: 'int')]
