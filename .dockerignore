@@ -1,0 +1,11 @@
+.git
+.gitignore
+/vendor/
+/var/
+/.env.local
+/.env.*.local
+/k8s/
+docker-compose.yml
+README.md
+.idea
+.vscode

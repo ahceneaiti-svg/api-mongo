@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: electronics
+
+resources:
+  - namespace.yaml
+  - mongodb-secret.yaml
+  - mongodb-pvc.yaml
+  - mongodb-deployment.yaml
+  - mongodb-service.yaml
+  - api-configmap.yaml
+  - api-secret.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - api-ingress.yaml
+  - api-indexes-job.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: electronics-api
+    includeSelectors: false
+
+images:
+  - name: electronics-api
+    newName: electronics-api
+    newTag: local

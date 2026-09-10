@@ -1,0 +1,13 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    http_method_override: false
+    handle_all_throwables: true
+    php_errors:
+        log: true
+    validation:
+        email_validation_mode: html5
+
+when@prod:
+    framework:
+        router:
+            strict_requirements: null

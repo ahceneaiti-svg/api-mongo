@@ -1,0 +1,44 @@
+# Cree les index MongoDB (unique sur sku, index category+brand).
+# Sous ArgoCD : execute en hook PostSync puis supprime si succes.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: api-create-indexes
+  namespace: electronics
+  labels:
+    app: electronics-api
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app: electronics-api
+        job: create-indexes
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: indexes
+          image: electronics-api:local
+          imagePullPolicy: IfNotPresent
+          command:
+            - php
+            - bin/console
+            - doctrine:mongodb:schema:create
+            - --index
+            - --no-interaction
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secret
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
