@@ -22,6 +22,6 @@ labels:
     includeSelectors: false
 
 images:
-  - name: electronics-api
-    newName: electronics-api
-    newTag: local
+  - name: ahceneaiti/electronics-api
+    newName: ahceneaiti/electronics-api
+    newTag: "1.0"

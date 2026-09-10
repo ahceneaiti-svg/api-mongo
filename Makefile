@@ -1,9 +1,9 @@
-IMAGE      ?= electronics-api:local
+IMAGE      ?= ahceneaiti/electronics-api:1.0
 KIND_NAME  ?= electronics
 NS         ?= electronics
 
 .PHONY: help install serve seed indexes compose-up compose-down \
-        docker-build kind-up kind-load kind-down ingress deploy undeploy \
+        docker-build docker-push kind-up kind-load kind-down ingress deploy undeploy \
         argocd-install argocd-app
 
 help:
@@ -35,10 +35,13 @@ compose-down: ## Stop + suppression des volumes
 docker-build: ## Build de l'image applicative
 	docker build -t $(IMAGE) .
 
+docker-push: docker-build ## Push l'image sur le registre (docker login requis)
+	docker push $(IMAGE)
+
 kind-up: ## Cree le cluster kind avec mapping ports 80/443
 	kind create cluster --name $(KIND_NAME) --config k8s/kind-config.yaml
 
-kind-load: docker-build ## Charge l'image dans les noeuds kind
+kind-load: docker-build ## Charge l'image locale dans les noeuds kind (sans registre)
 	kind load docker-image $(IMAGE) --name $(KIND_NAME)
 
 ingress: ## Installe ingress-nginx (variante kind)

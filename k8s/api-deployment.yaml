@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: electronics-api:local
+          image: ahceneaiti/electronics-api:1.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

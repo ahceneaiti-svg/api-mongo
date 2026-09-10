@@ -20,6 +20,7 @@ services:
     build:
       context: .
       target: runtime
+    image: ahceneaiti/electronics-api:1.0
     container_name: electronics-api
     ports:
       - "8000:8000"
