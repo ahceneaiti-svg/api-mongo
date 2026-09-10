@@ -9,3 +9,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/Kernel.php'
+
+    # mongodb-odm-bundle n'enregistre pas cet alias : requis par
+    # ServiceDocumentRepository (App\Repository\ProductRepository).
+    Doctrine\Persistence\ManagerRegistry: '@doctrine_mongodb'
