@@ -90,12 +90,17 @@ kubectl -n ingress-nginx wait --for=condition=ready pod \
 
 ## 5. Build de l'image
 
-Image de référence : **`ahceneaiti/electronics-api:1.0`** (référencée dans
+Image de référence : **`ahceneaiti/electronics-api:1.1`** (référencée dans
 `api-deployment.yaml`, `api-indexes-job.yaml`, `kustomization.yaml`).
+
+| Tag   | Contenu                                                                                    |
+|-------|-------------------------------------------------------------------------------------------|
+| `1.0` | Version initiale.                                                                          |
+| `1.1` | Fix DI : alias `Doctrine\Persistence\ManagerRegistry`. Fix validation : regex ISO 4217 à la place de `Assert\Currency` (évitait un 500 sur POST/PUT). |
 
 ```bash
 # depuis la racine du projet (où se trouve le Dockerfile)
-docker build -t ahceneaiti/electronics-api:1.0 .
+docker build -t ahceneaiti/electronics-api:1.1 .
 ```
 
 Deux façons de la rendre disponible aux nœuds kind :
@@ -103,10 +108,10 @@ Deux façons de la rendre disponible aux nœuds kind :
 ```bash
 # a) Registre (recommandé, requis pour ArgoCD)
 docker login
-docker push ahceneaiti/electronics-api:1.0
+docker push ahceneaiti/electronics-api:1.1
 
 # b) Chargement direct dans les nœuds kind (démo, sans registre)
-kind load docker-image ahceneaiti/electronics-api:1.0 --name electronics
+kind load docker-image ahceneaiti/electronics-api:1.1 --name electronics
 ```
 
 Le `Deployment` utilise `imagePullPolicy: IfNotPresent` → une image déjà présente
@@ -261,9 +266,9 @@ Le `Job api-create-indexes` s'exécute en **hook `PostSync`** et est supprimé
 en cas de succès (`hook-delete-policy: HookSucceeded`).
 
 > **Image :** l'`Application` déploie des manifestes qui référencent
-> `ahceneaiti/electronics-api:1.0`. Cette image doit être accessible aux nœuds :
-> - registre (recommandé pour ArgoCD) : `docker push ahceneaiti/electronics-api:1.0` ;
-> - démo sans registre : `kind load docker-image ahceneaiti/electronics-api:1.0 --name electronics` ;
+> `ahceneaiti/electronics-api:1.1`. Cette image doit être accessible aux nœuds :
+> - registre (recommandé pour ArgoCD) : `docker push ahceneaiti/electronics-api:1.1` ;
+> - démo sans registre : `kind load docker-image ahceneaiti/electronics-api:1.1 --name electronics` ;
 > - changement de version : mettre à jour le tag dans le bloc `images:` de
 >   `k8s/kustomization.yaml`, committer → ArgoCD redéploie.
 
@@ -274,10 +279,10 @@ en cas de succès (`hook-delete-policy: HookSucceeded`).
 **Manuel :**
 
 ```bash
-docker build -t ahceneaiti/electronics-api:1.1 .
-docker push ahceneaiti/electronics-api:1.1
-# ou sans registre : kind load docker-image ahceneaiti/electronics-api:1.1 --name electronics
-cd k8s && kustomize edit set image ahceneaiti/electronics-api=ahceneaiti/electronics-api:1.1 && cd ..
+docker build -t ahceneaiti/electronics-api:1.2 .
+docker push ahceneaiti/electronics-api:1.2
+# ou sans registre : kind load docker-image ahceneaiti/electronics-api:1.2 --name electronics
+cd k8s && kustomize edit set image ahceneaiti/electronics-api=ahceneaiti/electronics-api:1.2 && cd ..
 kubectl apply -k k8s/
 kubectl -n electronics rollout status deploy/electronics-api
 ```
@@ -291,7 +296,7 @@ ArgoCD applique le `RollingUpdate` (`maxUnavailable: 0`).
 
 | Symptôme                                   | Piste                                                                 |
 |--------------------------------------------|----------------------------------------------------------------------|
-| `ErrImageNeverPull` / `ImagePullBackOff`   | `docker push ahceneaiti/electronics-api:1.0` ou `kind load docker-image ahceneaiti/electronics-api:1.0 --name electronics` |
+| `ErrImageNeverPull` / `ImagePullBackOff`   | `docker push ahceneaiti/electronics-api:1.1` ou `kind load docker-image ahceneaiti/electronics-api:1.1 --name electronics` |
 | API `CrashLoopBackOff`                     | `kubectl -n electronics logs deploy/electronics-api` ; vérifier `MONGODB_URL` |
 | Readiness KO, `mongo: down`                | MongoDB pas `Ready` ; `kubectl -n electronics logs deploy/mongodb`   |
 | `curl electronics.local` → connexion refusée | Ingress non prêt, ou ligne `/etc/hosts` absente, ou ports 80/443 déjà pris |

@@ -1,4 +1,4 @@
-IMAGE      ?= ahceneaiti/electronics-api:1.0
+IMAGE      ?= ahceneaiti/electronics-api:1.1
 KIND_NAME  ?= electronics
 NS         ?= electronics
 

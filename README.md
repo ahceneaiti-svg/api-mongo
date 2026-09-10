@@ -37,7 +37,7 @@ d'abord manuellement puis en GitOps via **ArgoCD** — voir
 | Persistance      | MongoDB 7 via `doctrine/mongodb-odm-bundle` ^5              |
 | Validation       | `symfony/validator` (contraintes par attributs)             |
 | Serveur applicatif | FrankenPHP (Caddy + PHP), écoute sur `:8000`              |
-| Conteneur        | Image multi-stage `Dockerfile` — `ahceneaiti/electronics-api:1.0` |
+| Conteneur        | Image multi-stage `Dockerfile` — `ahceneaiti/electronics-api:1.1` |
 | Orchestration    | Kubernetes (kind), Ingress NGINX, ArgoCD                    |
 
 ---
@@ -482,9 +482,9 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main
 kubectl -n ingress-nginx wait --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller --timeout=180s
 
-docker build -t ahceneaiti/electronics-api:1.0 .
-docker push ahceneaiti/electronics-api:1.0
-# ou sans registre : kind load docker-image ahceneaiti/electronics-api:1.0 --name electronics
+docker build -t ahceneaiti/electronics-api:1.1 .
+docker push ahceneaiti/electronics-api:1.1
+# ou sans registre : kind load docker-image ahceneaiti/electronics-api:1.1 --name electronics
 
 kubectl apply -k k8s/
 kubectl -n electronics rollout status deploy/electronics-api

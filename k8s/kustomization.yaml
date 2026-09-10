@@ -24,4 +24,4 @@ labels:
 images:
   - name: ahceneaiti/electronics-api
     newName: ahceneaiti/electronics-api
-    newTag: "1.0"
+    newTag: "1.1"

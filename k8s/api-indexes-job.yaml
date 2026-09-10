@@ -22,7 +22,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: indexes
-          image: ahceneaiti/electronics-api:1.0
+          image: ahceneaiti/electronics-api:1.1
           imagePullPolicy: IfNotPresent
           command:
             - php
